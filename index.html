@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000; 
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #e50914; 
+      margin-bottom: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+    input {
+      width: 250px;
+      background: #111;
+      color: #fff;
+      border: 1px solid #e50914;
+    }
+    button {
+      background: #e50914;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #b0060f;
+    }
+    .card {
+      background: #111;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(229,9,20,0.4);
+      max-width: 400px;
+      margin: 20px auto;
+      border: 1px solid #e50914;
+      text-align: left;
+    }
+    .card h2 {
+      color: #e50914;
+      margin-bottom: 10px;
+    }
+    .card p {
+      margin: 6px 0;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 2px solid #e50914;
+    }
+  </style>
+</head>
+<body>
+  
+  <h1>🎬 Movie Searching</h1>
+
+  <input type="text" id="mname" placeholder="Enter movie name">
+  <button onclick="searchMovie()">Search</button>
+
+  <div class="container" id="result"></div>
+
+  <script>
+    const apikey = '50a89dd';
+
+    async function searchMovie() {
+      let movieName = mname.value;
+      if (!movieName) {
+        alert("Please enter a movie name!");
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://www.omdbapi.com/?t=${movieName}&apikey=${apikey}`);
+        const data = await response.json();
+
+        if (data.Response === "False") {
+          document.getElementById("result").innerHTML = `<p style="color:#e50914;">Movie not found!</p>`;
+        } else {
+          displayData(data);
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        document.getElementById("result").innerHTML = `<p style="color:#e50914;"> Something went wrong. Try again.</p>`;
+      }
+    }
+
+    function displayData(movie) {
+      document.getElementById("result").innerHTML = `
+        <div class="card">
+          <h2>${movie.Title} (${movie.Year})</h2>
+          <p><b>Genre:</b> ${movie.Genre}</p>
+          <p><b>Director:</b> ${movie.Director}</p>
+          <p><b>Actors:</b> ${movie.Actors}</p>
+          <p><b>IMDB Rating:</b> ${movie.imdbRating}</p>
+          <img src="${movie.Poster}" alt="Poster">
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
